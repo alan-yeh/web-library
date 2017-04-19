@@ -1,0 +1,8 @@
+rootProject.name = 'web-library'
+include 'spring-boot-starter-api'
+include 'spring-boot-starter-beetl'
+include 'spring-boot-starter-beetlsql'
+include 'spring-boot-starter-kit'
+include 'spring-boot-starter-sso-client'
+include 'web-http'
+

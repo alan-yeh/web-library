@@ -1,0 +1,58 @@
+apply plugin: 'java'
+
+version = '1.0.0'
+
+jar {
+    sourceCompatibility = JDK_VERSION
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+    compile project(':spring-boot-starter-beetl')
+
+    compile group: 'com.ibeetl', name: 'beetlsql', version: '2.8.6'
+    compile group: 'com.mchange', name: 'c3p0', version: '0.9.5.2'
+    compile group: 'com.hynnet', name: 'oracle-driver-ojdbc6', version: '12.1.0.1'
+
+    compile "org.springframework.boot:spring-boot-starter-jdbc:$STARTER_VERSION"
+}
+
+apply plugin: 'nexus'
+
+nexus {
+    repository {
+        username project.ext["nexus.username"]
+        password project.ext["nexus.password"]
+    }
+
+    signatory {
+        keyId project.ext["signatory.keyId"]
+        password project.ext["signatory.password"]
+    }
+
+    pom {
+        name 'Spring Boot Starter BeetlSql'
+        description 'BeetlSql for Java Web Project'
+        url 'https://github.com/alan-yeh/gradle-plugins'
+
+        scm {
+            url 'https://github.com/alan-yeh/gradle-plugins'
+            connection 'scm:https://github.com/alan-yeh/gradle-plugins.git'
+            developerConnection 'scm:git@github.com:alan-yeh/gradle-plugins.git'
+        }
+
+        licenses {
+            license {
+                name 'The Apache Software License, Version 2.0'
+                url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+            }
+        }
+
+        developers {
+            developer {
+                name 'Alan Yeh'
+                email 'alan@yerl.cn'
+            }
+        }
+    }
+}

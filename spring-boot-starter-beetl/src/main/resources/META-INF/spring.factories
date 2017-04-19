@@ -1,0 +1,1 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=cn.yerl.web.spring.beetl.BeetlConfiguration

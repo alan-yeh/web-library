@@ -1,0 +1,26 @@
+allprojects{
+    group = 'cn.yerl.web'
+    ext {
+        JDK_VERSION = 1.8
+        STARTER_VERSION = '1.5.2.RELEASE'
+    }
+}
+
+subprojects{
+    buildscript {
+        repositories {
+            mavenLocal()
+            maven { url 'https://oss.sonatype.org/content/groups/public/'}
+            mavenCentral()
+            jcenter()
+        }
+        dependencies {
+            classpath 'cn.yerl.gradle:nexus-plugin:+'
+        }
+    }
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        jcenter()
+    }
+}

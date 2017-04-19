@@ -1,0 +1,60 @@
+apply plugin: 'java'
+version = '1.0.0'
+
+jar {
+    sourceCompatibility = JDK_VERSION
+}
+
+dependencies {
+    compileOnly group: 'javax.servlet', name: 'servlet-api', version: '2.5'
+//    compile project(":web-library:web-sso-client")
+
+    compile "org.springframework.boot:spring-boot-starter-web:$STARTER_VERSION"
+    compile "org.springframework.boot:spring-boot-autoconfigure:$STARTER_VERSION"
+    
+    // 与Spring Security集成
+    compile "org.springframework.boot:spring-boot-starter-security:$STARTER_VERSION"
+
+    compile project(":spring-boot-starter-api")
+    compile project(":spring-boot-starter-kit")
+    compile project(":web-http")
+}
+apply plugin: 'nexus'
+
+nexus {
+    repository {
+        username project.ext["nexus.username"]
+        password project.ext["nexus.password"]
+    }
+
+    signatory {
+        keyId project.ext["signatory.keyId"]
+        password project.ext["signatory.password"]
+    }
+
+    pom {
+        name 'Spring Boot Starter SSO Client'
+        description 'SSO Client for Java Web Project'
+        url 'https://github.com/alan-yeh/gradle-plugins'
+
+        scm {
+            url 'https://github.com/alan-yeh/gradle-plugins'
+            connection 'scm:https://github.com/alan-yeh/gradle-plugins.git'
+            developerConnection 'scm:git@github.com:alan-yeh/gradle-plugins.git'
+        }
+
+        licenses {
+            license {
+                name 'The Apache Software License, Version 2.0'
+                url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+            }
+        }
+
+        developers {
+            developer {
+                name 'Alan Yeh'
+                email 'alan@yerl.cn'
+            }
+        }
+    }
+}
