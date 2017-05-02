@@ -21,8 +21,8 @@ public class ApiResult <T> implements Serializable {
     private String desc = "执行成功";
     private T data;
     private Pager pager;
-    private Timestamp timestamp;
-    public Timestamp getTimestamp(){
+    private long timestamp;
+    public long getTimestamp(){
         return timestamp;
     }
 
@@ -72,7 +72,7 @@ public class ApiResult <T> implements Serializable {
         }
     }
     public ApiResult(){
-        this.timestamp = new Timestamp(new Date().getTime());
+        this.timestamp = new Date().getTime();
     }
 
     public ApiResult(ApiStatus status, String desc) {

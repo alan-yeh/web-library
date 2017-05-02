@@ -7,7 +7,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class SSOProperties {
     private String applicationAddress;
     private String serverAddress;
-    private String serverValidateAddress;
     private String urlPatterns;
 
     public String getServerAddress() {
@@ -24,14 +23,6 @@ public class SSOProperties {
 
     public void setApplicationAddress(String applicationAddress) {
         this.applicationAddress = applicationAddress;
-    }
-
-    public String getServerValidateAddress() {
-        return serverValidateAddress;
-    }
-
-    public void setServerValidateAddress(String serverValidateAddress) {
-        this.serverValidateAddress = serverValidateAddress;
     }
 
     public String getUrlPatterns() {

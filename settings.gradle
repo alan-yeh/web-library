@@ -5,4 +5,6 @@ include 'spring-boot-starter-beetlsql'
 include 'spring-boot-starter-kit'
 include 'spring-boot-starter-sso-client'
 include 'web-http'
+include 'web-mail'
+include 'spring-boot-starter-logger'
 

@@ -15,6 +15,8 @@ dependencies {
     // 与Spring Security集成
     compile "org.springframework.boot:spring-boot-starter-security:$STARTER_VERSION"
 
+    compile group: 'com.jfinal', name: 'jfinal', version: '3.0'
+
     compile project(":spring-boot-starter-api")
     compile project(":spring-boot-starter-kit")
     compile project(":web-http")

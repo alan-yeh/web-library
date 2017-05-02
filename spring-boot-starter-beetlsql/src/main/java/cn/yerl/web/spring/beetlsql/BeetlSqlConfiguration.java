@@ -76,25 +76,17 @@ public class BeetlSqlConfiguration{
         return manager;
     }
 
-    @Bean(destroyMethod = "close")
-    public DataSource dataSource() throws Exception{
-        DatasourceProperties jdbc = new DatasourceProperties();
-        jdbc.setDriverClassName("oracle.jdbc.driver.OracleDriver");
-        jdbc.setInitialSize(3);
-        jdbc.setMaxActive(4);
-        jdbc.setUsername("test_base");
-        jdbc.setPassword("11");
-        jdbc.setJdbcUrl("jdbc:oracle:thin:@10.0.1.3:1521:orcl");
-
+    @Bean
+    public DataSource dataSource(@Autowired Environment environment) throws Exception{
 
         ComboPooledDataSource dataSource = new ComboPooledDataSource("dataSource");
-        dataSource.setDriverClass(jdbc.getDriverClassName());
-        dataSource.setInitialPoolSize(jdbc.getInitialSize());
-        dataSource.setMaxPoolSize(jdbc.getMaxActive());
+        dataSource.setDriverClass(environment.getProperty("spring.datasource.driver-class-name"));
+        dataSource.setInitialPoolSize(environment.getProperty("spring.datasource.initial-size", int.class));
+        dataSource.setMaxPoolSize(environment.getProperty("spring.datasource.max-active", int.class));
 
-        dataSource.setJdbcUrl(jdbc.getJdbcUrl());
-        dataSource.setUser(jdbc.getUsername());
-        dataSource.setPassword(jdbc.getPassword());
+        dataSource.setJdbcUrl(environment.getProperty("spring.datasource.jdbc-url"));
+        dataSource.setUser(environment.getProperty("spring.datasource.username"));
+        dataSource.setPassword(environment.getProperty("spring.datasource.password"));
         return dataSource;
     }
 }

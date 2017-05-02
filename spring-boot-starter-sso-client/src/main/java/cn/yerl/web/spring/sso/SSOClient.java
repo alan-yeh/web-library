@@ -2,17 +2,24 @@ package cn.yerl.web.spring.sso;
 
 import cn.yerl.web.http.WebHttpRequest;
 import cn.yerl.web.kit.Render;
+import cn.yerl.web.kit.StrKit;
 import cn.yerl.web.spring.api.ApiResult;
 import cn.yerl.web.spring.api.ApiStatus;
+import cn.yerl.web.spring.sso.model.Token;
 import cn.yerl.web.spring.sso.properties.SSOProperties;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
+import com.jfinal.plugin.activerecord.CaseInsensitiveContainerFactory;
+import com.jfinal.plugin.activerecord.dialect.OracleDialect;
 import org.apache.http.client.utils.URIBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -39,7 +46,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.sql.DataSource;
 import java.io.IOException;
+import java.sql.Connection;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.function.Consumer;
@@ -190,6 +199,20 @@ public class SSOClient extends WebSecurityConfigurerAdapter implements Authentic
         return entryPoint;
     }
 
+    @Bean(destroyMethod = "stop")
+    ActiveRecordPlugin activeRecordPlugin(@Qualifier("dataSource")DataSource dataSource){
+        ActiveRecordPlugin record = new ActiveRecordPlugin(dataSource);
+        record.addMapping(Token.meta.TABLE_NAME, Token.meta.AUTH_CODE, Token.class);
+
+        record.setDevMode(true);
+        record.setDialect(new OracleDialect());
+        record.setTransactionLevel(Connection.TRANSACTION_READ_COMMITTED);
+        record.setContainerFactory(new CaseInsensitiveContainerFactory());
+
+        record.start();
+        return record;
+    }
+
     /**
      * 处理登录成功，如果session中存有return_req，则重定向到/api/security/rewrite中，返回之前的结果
      * 之后以不在这个方法中返回之前的结果，是因为要将session_id的cookie写到response中
@@ -237,7 +260,7 @@ public class SSOClient extends WebSecurityConfigurerAdapter implements Authentic
         builder.append("------------------------------------------------------------------------------");
         logger.info(builder.toString());
 
-        Render.renderJson(ApiResult.failure(ApiStatus.UNAUTHORIZED, "用户名或密码错误"), request, response);
+        Render.renderJson(ApiResult.failure(ApiStatus.UNAUTHORIZED, exception.getMessage()), request, response);
     }
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
@@ -261,26 +284,26 @@ public class SSOClient extends WebSecurityConfigurerAdapter implements Authentic
                 }
                 try {
 
-                    String responseText = WebHttpRequest.GET(properties.getServerValidateAddress() + "/sso-server/validate")
-                            .withQueryParam("auth_code", authentication.getCredentials().toString())
-                            .execute().getText();
-
-                    JsonNode json = MAPPER.readTree(responseText);
-
-                    if (json.get("status").asInt() == 200){
-                        String remoteUser = json.get("data").get("user_code").asText();
-
-                        // 验证成功，登录成功
-                        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-                        grantedAuthorities.add(new SimpleGrantedAuthority("USER"));
-                        Authentication result = new UsernamePasswordAuthenticationToken(remoteUser, authentication.getCredentials(), grantedAuthorities);
-
-                        return result;
+                    Token token = Token.dao.findById(authentication.getCredentials());
+                    Token.dao.deleteById(authentication.getCredentials());
+                    if (token == null){
+                        throw new BadCredentialsException("认证失败");
                     }
-                    throw new BadCredentialsException(json.get("desc").asText());
+
+                    if (StrKit.isBlank(token.getStr(Token.meta.USER_CODE))){
+                        throw new BadCredentialsException("未登录");
+                    }
+
+                    // 验证成功，登录成功
+                    List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
+                    grantedAuthorities.add(new SimpleGrantedAuthority("USER"));
+                    Authentication result = new UsernamePasswordAuthenticationToken(token.getStr(Token.meta.USER_CODE), authentication.getCredentials(), grantedAuthorities);
+
+                    return result;
 
                 }catch (Exception ex){
-                    throw new DisabledException("SSO不可用");
+                    logger.error("SSO证验异常", ex);
+                    throw new DisabledException("SSO不可用", ex);
                 }
             }
 

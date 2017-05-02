@@ -1,23 +1,16 @@
-apply plugin: 'java'
-version = '1.0.0'
+group 'cn.yerl.web'
+version '1.0.0'
 
-jar {
-    sourceCompatibility = JDK_VERSION
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
 }
 
 dependencies {
-    compileOnly group: 'javax.servlet', name: 'servlet-api', version: '2.5'
-
-    compile project(":spring-boot-starter-kit")
-
-    compile "org.springframework.boot:spring-boot-starter-web:$STARTER_VERSION"
-    compile "org.springframework.boot:spring-boot-starter-logging:$STARTER_VERSION"
-
-    // upload
-    compile group: 'commons-fileupload', name: 'commons-fileupload', version: '1.3.2'
-    compile group: 'commons-io', name: 'commons-io', version: '2.5'
-
-    compileOnly group: 'com.hynnet', name: 'oracle-driver-ojdbc6', version: '12.1.0.1'
+    compile group: 'javax.mail', name: 'mail', version: '1.4.7'
 }
 
 apply plugin: 'nexus'
@@ -34,8 +27,8 @@ nexus {
     }
 
     pom {
-        name 'Spring Boot Starter Api'
-        description 'Api Configuration for Java Web Project'
+        name 'Spring Boot Starter Logger'
+        description 'Logger for Java Web Project'
         url 'https://github.com/alan-yeh/gradle-plugins'
 
         scm {
