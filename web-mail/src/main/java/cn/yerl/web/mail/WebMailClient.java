@@ -55,6 +55,23 @@ public class WebMailClient {
             }
         });
 
+        request.getCc().forEach(it -> {
+            try {
+                message.addRecipient(MimeMessage.RecipientType.CC, new InternetAddress(it.getAddress(), it.getPersonal(), "UTF-8"));
+            }catch (Exception ex){
+                throw new RuntimeException(ex);
+            }
+        });
+
+        request.getBcc().forEach(it -> {
+            try {
+                message.addRecipient(MimeMessage.RecipientType.BCC, new InternetAddress(it.getAddress(), it.getPersonal(), "UTF-8"));
+            }catch (Exception ex){
+                throw new RuntimeException(ex);
+            }
+        });
+
+
         message.setSubject(request.getSubject());
         message.setContent(request.getContent(), "text/html;charset=UTF-8");
         message.setSentDate(new Date());

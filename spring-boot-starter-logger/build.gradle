@@ -1,9 +1,8 @@
-version '1.0.0'
-
 apply plugin: 'java'
 
-sourceCompatibility = 1.8
-
+jar {
+    sourceCompatibility = JDK_VERSION
+}
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'

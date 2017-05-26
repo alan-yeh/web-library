@@ -1,8 +1,9 @@
 allprojects{
     group = 'cn.yerl.web'
+    version = '1.0.0'
     ext {
         JDK_VERSION = 1.8
-        STARTER_VERSION = '1.5.2.RELEASE'
+        STARTER_VERSION = '1.5.3.RELEASE'
     }
 }
 

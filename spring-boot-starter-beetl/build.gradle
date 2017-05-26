@@ -1,7 +1,5 @@
 apply plugin: 'java'
 
-version = '1.0.0'
-
 jar {
     sourceCompatibility = JDK_VERSION
 }

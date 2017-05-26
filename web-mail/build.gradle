@@ -1,12 +1,9 @@
 group 'cn.yerl.web'
-version '1.0.0'
 
 apply plugin: 'java'
 
-sourceCompatibility = 1.8
-
-repositories {
-    mavenCentral()
+jar {
+    sourceCompatibility = JDK_VERSION
 }
 
 dependencies {

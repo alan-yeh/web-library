@@ -1,6 +1,5 @@
 package cn.yerl.web.mail;
 
-import javax.mail.internet.InternetAddress;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -12,11 +11,15 @@ import java.util.List;
 public class WebMailRequest {
     private MailAddress from;
     private List<MailAddress> to;
+    private List<MailAddress> cc;
+    private List<MailAddress> bcc;
     private String subject;
     private String content;
 
     public WebMailRequest(){
         this.to = new ArrayList<>();
+        this.cc = new ArrayList<>();
+        this.bcc = new ArrayList<>();
     }
 
     public WebMailRequest from(MailAddress address){
@@ -24,8 +27,27 @@ public class WebMailRequest {
         return this;
     }
 
+    /**
+     * 收件人
+     */
     public WebMailRequest to(MailAddress... addresses){
         this.to.addAll(Arrays.asList(addresses));
+        return this;
+    }
+
+    /**
+     * 抄送
+     */
+    public WebMailRequest cc(MailAddress... addresses){
+        this.cc.addAll(Arrays.asList(addresses));
+        return this;
+    }
+
+    /**
+     * 密送
+     */
+    public WebMailRequest bcc(MailAddress... addresses){
+        this.bcc.addAll(Arrays.asList(addresses));
         return this;
     }
 
@@ -54,6 +76,22 @@ public class WebMailRequest {
 
     public void setTo(List<MailAddress> to) {
         this.to = to;
+    }
+
+    public List<MailAddress> getCc() {
+        return cc;
+    }
+
+    public void setCc(List<MailAddress> cc) {
+        this.cc = cc;
+    }
+
+    public List<MailAddress> getBcc() {
+        return bcc;
+    }
+
+    public void setBcc(List<MailAddress> bcc) {
+        this.bcc = bcc;
     }
 
     public String getSubject() {
