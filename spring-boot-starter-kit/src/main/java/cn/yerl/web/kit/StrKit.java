@@ -62,18 +62,34 @@ public class StrKit {
     /**
      * 格式化字符串
      * Example:
-     * StrKit.format("This is a ? string", "formated");
+     * StrKit.format("This is a ? string", "formatted");
      */
     public static String format(String format, Object... arg){
-        for (int i = 0; i < arg.length; i++) {
-            if (arg[i] != null){
-                format = format.replaceFirst("[?]", arg[i].toString());
-            }else {
-                format = format.replaceFirst("[?]", "");
-            }
+        StringBuilder result = new StringBuilder();
 
+        String[] segments = (format + " ").split("[?]");
+        for (int i = 0; i < segments.length; i ++){
+            result.append(segments[i]);
+
+            if (i != segments.length - 1){
+                if (arg.length > i){
+                    result.append(arg[i] == null ? "(null)" : arg[i].toString());
+                }else {
+                    result.append("?");
+                }
+            }
         }
-        return format;
+        return result.substring(0, result.length() - 1);
+
+//        for (int i = 0; i < arg.length; i++) {
+//            if (arg[i] != null){
+//                format = format.replaceFirst("[?]", arg[i].toString());
+//            }else {
+//                format = format.replaceFirst("[?]", "");
+//            }
+//
+//        }
+//        return format;
     }
 
     public static String format(String format, Map<String, Object> arg){

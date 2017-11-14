@@ -5,7 +5,7 @@ jar {
 }
 
 dependencies {
-    compile 'com.ibeetl:beetl:2.7.12'
+    compile 'com.ibeetl:beetl:2.7.23'
 
     compile "org.springframework.boot:spring-boot-starter-web:$STARTER_VERSION"
     compile "org.springframework.boot:spring-boot-autoconfigure:$STARTER_VERSION"

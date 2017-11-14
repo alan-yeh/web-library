@@ -97,6 +97,7 @@ public class WebHttpRequest implements Serializable {
         }catch (Exception ex){
             throw new RuntimeException("Property [spring.sso.application-address] is not valid");
         }
+        System.err.println("WebHttpRequest请求地址：" + requestURI);
 
         //暂时只支持GET，后面再将参数放进来
         this.url = requestURI;
@@ -247,16 +248,13 @@ public class WebHttpRequest implements Serializable {
     }
 
     public void rewrite(HttpServletResponse resp){
+        HttpUriRequest request = buildRequest();
+
+        long begin = new Date().getTime();
+
         try {
-            HttpUriRequest request = buildRequest();
-
-
             HttpClient httpClient = getHttpsClient();
 
-
-            long begin = new Date().getTime();
-            System.out.println("【请求开始时间】:" + begin);
-            System.out.println("【请求地址】:" + request.getURI().toString());
             HttpResponse response = httpClient.execute(request);
 
             int status = response.getStatusLine().getStatusCode();
@@ -283,12 +281,12 @@ public class WebHttpRequest implements Serializable {
                     stream.close();
                 }
             }
-            long end = new Date().getTime();
-            System.out.println("【请求结束时间】:" + end);
-            System.out.println("【共耗时】:" + (end - begin));
-
         }catch (Exception ex){
-            throw new RuntimeException(ex);
+            throw new RuntimeException("请求地址发生错误：" + request.getURI().toString(), ex);
+        }finally {
+            long end = new Date().getTime();
+            System.out.println("【请求地址】:" + request.getURI().toString());
+            System.out.println("【共耗时】:" + (end - begin));
         }
     }
 

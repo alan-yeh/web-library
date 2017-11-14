@@ -9,6 +9,7 @@ import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.nio.file.AccessDeniedException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,6 +31,9 @@ public class JsonExceptionHandlerExceptionResolver extends ExceptionHandlerExcep
             ApiException ex = (ApiException)exception;
             result.put("status", ex.getStatus());
             result.put("desc", ex.getErrorMsg());
+        }else if ("org.springframework.security.access.AccessDeniedException".equals(exception.getClass().getName())) {
+            result.put("status", ApiStatus.FORBIDDEN.getValue());
+            result.put("desc", exception.getMessage());
         }else {
             result.put("status", ApiStatus.SERVER_ERROR.getValue());
             result.put("desc", exception.getMessage());

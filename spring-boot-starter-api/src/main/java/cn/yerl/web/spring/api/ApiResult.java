@@ -72,7 +72,7 @@ public class ApiResult <T> implements Serializable {
         }
     }
     public ApiResult(){
-        this.timestamp = new Date().getTime();
+        this.timestamp = System.currentTimeMillis();
     }
 
     public ApiResult(ApiStatus status, String desc) {
@@ -104,6 +104,10 @@ public class ApiResult <T> implements Serializable {
         return new ApiResult();
     }
 
+    public static <T> ApiResult<T> success(String desc, T data){
+        return new ApiResult<>(ApiStatus.OK, desc, data);
+    }
+
     public static <T> ApiResult<T> success(T data){
         return new ApiResult(data);
     }
@@ -112,8 +116,12 @@ public class ApiResult <T> implements Serializable {
         return new ApiResult(data, pager);
     }
 
-    public static ApiResult failure(ApiStatus status, String desc, String... args) {
+    public static ApiResult failure(ApiStatus status, String desc, Object... args) {
         return new ApiResult(status, StrKit.format(desc, args));
+    }
+
+    public static ApiResult failure(ApiStatus status, String desc) {
+        return new ApiResult(status, desc);
     }
 
     public static ApiResult failure(String desc){

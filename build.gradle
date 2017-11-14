@@ -1,9 +1,9 @@
 allprojects{
     group = 'cn.yerl.web'
-    version = '1.0.0'
+    version = '1.0.1.SNAPSHOT'
     ext {
         JDK_VERSION = 1.8
-        STARTER_VERSION = '1.5.3.RELEASE'
+        STARTER_VERSION = '1.5.7.RELEASE'
     }
 }
 
@@ -11,6 +11,7 @@ subprojects{
     buildscript {
         repositories {
             mavenLocal()
+            maven { url 'http://maven.minstone.com.cn/content/groups/public/'}
             maven { url 'https://oss.sonatype.org/content/groups/public/'}
             mavenCentral()
             jcenter()
@@ -21,6 +22,7 @@ subprojects{
     }
     repositories {
         mavenLocal()
+        maven { url 'http://maven.minstone.com.cn/content/groups/public/'}
         mavenCentral()
         jcenter()
     }

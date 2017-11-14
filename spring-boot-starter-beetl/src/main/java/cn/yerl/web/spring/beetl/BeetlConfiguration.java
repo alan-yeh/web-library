@@ -1,10 +1,15 @@
 package cn.yerl.web.spring.beetl;
 
+import org.beetl.core.Function;
 import org.beetl.core.resource.ClasspathResourceLoader;
 import org.beetl.ext.spring.BeetlGroupUtilConfiguration;
 import org.beetl.ext.spring.BeetlSpringViewResolver;
+import org.beetl.ext.spring.UtilsFunctionPackage;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Configuration for beetl
@@ -21,6 +26,10 @@ public class BeetlConfiguration {
         }catch (Exception ex){
             throw new RuntimeException(ex);
         }
+
+        Map<String, Object> functions = new HashMap<>();
+        functions.put("sputil", new UtilsFunctionPackage());
+        configuration.setFunctionPackages(functions);
 
         return configuration;
     }
